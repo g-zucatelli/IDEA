@@ -1,0 +1,37 @@
+<ion-view view-title="Identificação de Emoções"> 
+	<ion-content class="padding">
+		  
+	  <div class="list card"> 
+		<div class="item item-body">
+
+	    <!-- Use "Crt" + "/" ! -->
+	    <!-- <img class="full-image padding" src={{state.url_image}}> -->
+	    <!-- <img class="full-image padding" src={{pictureUrl}}> -->
+	    <img class="full-image padding" src={{state.url_image_android}}>
+	    </div>
+	  </div>
+
+	  <!--balanced / energized / dark / assertive / stable/ light-->
+
+	    <center><button id="startCapture" class="button button-block button-outline button-balanced" ng-click="ChangeImage()">
+	    	Start!
+	    </button></center>
+
+	    <!-- <div id="infoTimer" class="w3-container w3-section w3-border-green w3-border w3-small"></div> -->
+
+	   
+	    <center><button id="stopCapture" class="button button-block button-outline button-energized" ng-click="StopChange()">
+	    	Stop!
+	    </button></center>
+
+		<!-- <center><button class="button button-block button-outline button-light" ng-click="record()">
+	    	Get Audio!
+	    </button></center>
+ -->
+	    <center><button class="button button-block button-outline button-light" ng-click="teste_DEMO()">
+	    	Print Audio!
+	    </button></center>
+
+
+	</ion-content>
+</ion-view>

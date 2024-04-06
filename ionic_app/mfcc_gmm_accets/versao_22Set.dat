@@ -1,0 +1,312 @@
+<!--ID.html-->
+
+<ion-view view-title="Identificação de Emoções"> 
+	<ion-content class="padding">
+		  
+	  <div class="list card">
+		<div class="item item-body">
+
+	    <!-- Use "Crt" + "/" ! -->
+	    <!-- <img class="full-image padding" src={{state.url_image}}> -->
+	    <!-- <img class="full-image padding" src={{pictureUrl}}> -->
+	    <img class="full-image padding" src={{state.url_image_android}}>
+	    </div>
+	  </div>
+
+	  <!--balanced / energized / dark / assertive / stable/ light-->
+
+	    <center><button class="button button-block button-outline button-balanced" ng-click="start()">
+	    	Start!
+	    </button></center>
+
+
+	    <center><button class="button button-block button-outline button-energized" ng-click="stop()">
+	    	Stop!
+	    </button></center>
+
+		<center><button class="button button-block button-outline button-light" ng-click="record()">
+	    	Get Audio!
+	    </button></center>
+
+	    <center><button class="button button-block button-outline button-light" ng-click="Print_Data()">
+	    	Print Audio!
+	    </button></center>
+
+
+	</ion-content>
+</ion-view>
+
+
+
+
+//controllers.js
+
+angular.module('ID_App.controllers', ['ionic', 'ngCordova', 'ID_App.services'])
+
+  
+/*
+Controller for the discover page
+*/
+.controller('ID_Ctrl', function($scope, $interval, EMO) {
+	
+	//$scope.state = EMO.getmodel(Math.round(Math.random() * (3)) + 1);
+	$scope.state = EMO.getmodel(0);
+	// $scope.pictureUrl = 'http://placehold.it/300x300';
+	console.log("TESTE1");
+	console.log($scope.state);
+
+	$scope.ChangeImage = function(){
+		//Recordings.start();
+		console.log("Recording Started?");
+		change = $interval(function(){
+			//console.log("Teste 3");
+			$scope.state = EMO.getmodel(Math.round(Math.random() * (3)) + 1);
+			console.log($scope.state);
+		},3000);
+	}
+
+	$scope.StopChange = function(){
+		//Recordings.stop();
+		console.log("Recording Stopped?");
+		//clearInterval($scope.ChangeImage.Sint);
+		$interval.cancel(change);
+		$scope.state = EMO.getmodel(0);	
+	}
+
+
+
+
+
+	var config = {
+	   source: 0,
+	   channel: 12,
+	   format: 2,
+	   sampleRate: 8000 // sample frequency 
+	}
+	    
+	document.addEventListener('deviceready', function(){
+	    window.plugins.audioReader.init();
+	    console.log("Device Ready!!!");
+	}, false)
+	 
+	$scope.start = function(){
+	   window.plugins.audioReader.start();
+	}
+	   
+	$scope.stop = function(){  		
+	   window.plugins.audioReader.stop();
+	}
+	   
+	$scope.record = function(){
+	    var success = function(result){
+	   	 	var leftChannel = result.leftChannel;
+	        var rightChannel = result.rightChannel;
+	        
+	        console.log(leftChannel);
+	        $scope.left1  = leftChannel;
+	        $scope.right1 = rightChannel;
+	       
+	       	$scope.left2  = result.leftChannel;
+	        $scope.right2 = result.rightChannel;
+	        //handle the data read from left or right channel. 
+	        // ...
+	    }
+	    
+	    window.plugins.audioReader.read(8000,0,success,null);
+
+	    console.log(JSON.stringify(success));
+	    console.log(success.leftChannel);
+	    console.log(success.rightChannel)
+	    console.log($scope.left1);
+		console.log($scope.right1);
+		console.log($scope.left2);
+		console.log($scope.right2);
+		//console.log(leftChannel);
+		//console.log(rightChannel);
+	    
+	    // setInterval(function(){    
+	    //     window.plugins.audioReader.read(8000,0,success,null);
+	   	// 	// console.log(success.leftChannel);
+	   	// 	// console.log($scope.left);
+	   	// 	// console.log($scope.right);
+	   	// },1000)
+	}
+	
+	$scope.Print_Data = function(){
+		//$scope.teste = Recordings.record();
+		console.log("Recorded?");
+		//console.log(success);
+	    console.log($scope.left1);
+		console.log($scope.right1);
+		console.log($scope.left2);
+		console.log($scope.right2);
+		//$scope.left  = success.leftChannel;
+	    //$scope.right = success.rightChannel;
+	    //console.log($scope.left);
+		//console.log($scope.right);
+	}
+
+
+	// $scope.Camera_test = function(){
+	// 	console.log("Camera Function Called");
+
+	// 	var options = {
+	// 	  destinationType: Camera.DestinationType.DATA_URL,
+	//       encodingType: Camera.EncodingType.JPEG
+	// 	}
+
+	// 	$cordovaCamera.getPicture(options)
+	// 	.then(function(data){
+	// 		console.log('camera data:' + angular.toJson(data));
+			
+	// 		$scope.pictureUrl = "data:image/jpeg;base64," + data;
+
+	// 	}, function(error){
+	// 		console.log('camera error:' + angular.toJson(data));
+	// 		}); 
+	// }
+
+
+
+	// $scope.Audio_test = function(){
+	// 		console.log("Audio Function Called");
+
+	// 		var options = {
+	// 		  limit: 1,
+	// 	      duration: 3
+	// 		}
+
+	// 		$cordovaCapture.captureAudio(options)
+	// 		.then(function(Audio_data){
+	// 			console.log("AUDIO 1");
+	// 			console.log('Audio data:' + angular.toJson(Audio_data));
+				
+	// 			//$scope.pictureUrl = "data:image/jpeg;base64," + data;
+
+	// 		}, function(error){
+	// 			console.log('Audio error:' + angular.toJson(Audio_data));
+	// 			}); 
+	// 	}
+
+})
+
+/*
+Controller for the favorites page
+*/
+.controller('Config_Ctrl', function($scope) {
+
+})
+
+.controller('Info_Ctrl', function($scope) {
+
+})
+
+
+/*
+Controller for our tab bar
+*/
+.controller('TabsCtrl', function($scope) {
+
+})
+
+;
+
+
+
+
+
+
+//services.js 
+
+angular.module('ID_App.services', ['ionic'])
+ 
+.factory('EMO', function(){
+
+	var estados = [
+		{
+			modelo: [1, 2, 3],
+			url_image: "/img/Stand_By.png",
+			url_image_android: "/android_asset/www/img/Stand_By.png"
+		},
+		{
+			modelo: [1, 2, 3],
+			url_image: "/img/Raiva.png",
+			url_image_android: "/android_asset/www/img/Raiva.png"
+		},
+		{
+			modelo: [1, 2, 3],
+			url_image: "/img/Felicidade.png",
+			url_image_android: "/android_asset/www/img/Felicidade.png"
+		},
+		{
+			modelo: [1, 2, 3],
+			url_image: "/img/Tristeza.png",
+			url_image_android: "/android_asset/www/img/Tristeza.png"
+		},
+		{
+			modelo: [1, 2, 3],
+			url_image: "/img/Neutro.png",
+			url_image_android: "/android_asset/www/img/Neutro.png"
+		}
+	];
+
+	estados.getmodel = function(index){
+		//console.log(estados[index]);
+		return estados[index];
+	}
+
+
+	//var estados2 = "teste";
+
+	return estados;	
+})
+
+// .factory('Recordings', function(){
+// 	var config = {
+// 	   source: AudioSource.DEFAULT,
+// 	   channel: AudioChannel.CHANNEL_IN_MONO,
+// 	   format: AudioFormat.ENCODING_PCM_16BIT,
+// 	   sampleRate: 16000 // sample frequency 
+// 	}
+	
+// 	var rec = {};
+
+// 	document.addEventListener('deviceready', function(){
+// 	    window.plugins.audioReader.init(config);
+// 	    console.log("Device Ready!!!");
+// 	 }, false)
+	 
+// 	 rec.start = function(){
+// 	   window.plugins.audioReader.start();
+// 	 }
+	   
+// 	 rec.stop = function(){  		
+// 	   window.plugins.audioReader.stop();
+// 	 }
+	   
+// 	 rec.record = function(){
+// 	   ionic.Platform.ready(function(){
+// 		   window.plugins.audioReader.init(config);	
+// 		})
+
+// 	   var success = function(result){
+// 	   	 	var leftChannel = result.leftChannel;
+// 	        var rightChannel = result.rightChannel;
+	        
+// 	        return(leftChannel);
+// 	        //handle the data read from left or right channel. 
+// 	        // ...
+// 	    }
+	    
+// 	    setInterval(function(){    
+// 	        window.plugins.audioReader.read(8000,0,success,null);
+// 	   		// console.log(success.leftChannel);
+// 	   		// console.log($scope.left);
+// 	   		// console.log($scope.right);
+// 	   	},1000)
+// 	}
+
+// 	return rec;
+// })
+;
+

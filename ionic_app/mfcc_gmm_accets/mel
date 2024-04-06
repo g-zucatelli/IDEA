@@ -1,0 +1,63 @@
+Min_f=0;
+Max_f=8000;
+
+
+Min_mel=1125*log(1+Min_f/700)
+Max_mel=1125*log(1+Max_f/700)
+
+number_filters=26;
+
+delta=(Max_mel-Min_mel)/(number_filters+1);
+
+mel_freqs=Min_mel:delta:Max_mel
+
+freqs=700*(exp(mel_freqs/1125)-1)
+
+
+nfft=512;samplerate=16000;
+delta_freq=samplerate/nfft;
+
+disc_freq=Min_f:delta_freq:Max_f-delta_freq //considerando 0 com energia
+
+//disc_freq=Min_f-delta-freq:delta_freq:Max_f caso contrario
+
+//Parcela do filtro relativa a cada ponto da DFT
+cont=0;
+M=[];
+for i=1:length(freqs)-2
+  var=1:1:256;
+  var=var*0;
+    for j=1:length(disc_freq)
+    if(disc_freq(j) > freqs(i) & disc_freq(j) <= freqs(i+1) ) then
+      var(j)=var(j)+(disc_freq(j)-freqs(i))/(freqs(i+1)-freqs(i));
+      end
+    if(disc_freq(j) >= freqs(i+1) & disc_freq(j) < freqs(i+2) ) then
+      var(j)=var(j)+(freqs(i+2)-disc_freq(j))/(freqs(i+2)-freqs(i+1));
+      end
+    
+    end
+  M=[M;var];
+end
+
+N=1:1:48
+N=N*0
+M_reduced=[];
+
+for i:1:26
+  cont=0;
+  for j:1:256
+    if(M(i,j)==0 & M(i,j+1)!=0) then
+      M_reduced=[M_reduced ; N];
+      M_reduced(i,1)=i-1;
+    end  
+    
+  end
+end
+
+
+
+
+
+
+
+
